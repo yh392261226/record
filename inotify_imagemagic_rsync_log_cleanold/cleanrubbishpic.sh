@@ -6,6 +6,19 @@ getoperatefileslist() {
     echo $result| sed 's, ,\n,g' > /tmp/$operatedate
 }
 
+
+
+#验证是否在文件中
+checkinfile() {
+    checkval=$1
+    checkfile=$2
+    cat $2|grep "$1"
+    if [ $? -eq 1 ]; then
+        return 1
+    fi
+    return 0
+}
+
 ##比对得到要处理的文件列表
 getrubbishbydiff() {
     if [ ! -f $usingfile ]; then
@@ -14,14 +27,21 @@ getrubbishbydiff() {
         return 0
     fi
     cat $usingfile| sed "s,${usingexclude},,g" > /tmp/2_$operatedate
-    result=$(/usr/bin/diff -w /tmp/$operatedate /tmp/2_$operatedate);
-    if [ "" = "$result" ]; then
+    #result=$(/usr/bin/diff -w /tmp/$operatedate /tmp/2_$operatedate);
+    for ddfile in $(cat /tmp/$operatedate); do
+        checkinfile $ddfile /tmp/2_$operatedate
+        if [ $? -eq 1 ]; then
+            echo $ddfile >> $alreadypath/$curlock
+        fi
+    done
+
+    if [ "" = "$(cat $alreadypath/$curlock)" ]; then
         rm -f /tmp/$operatedate /tmp/2_$operatedate
         touch $alreadypath/$curlock$curlockext
         return 0
     fi
     #result=$(/usr/bin/diff -w /tmp/$operatedate $(cat $usingfile| sed "s,${usingexclude},,g")| grep "< "|sed 's,< ,,g');
-    echo $result| grep "< "|sed 's,< ,,g' > $alreadypath/$curlock
+#    echo $result| grep "< "|sed 's,< ,,g' > $alreadypath/$curlock
 }
 
 ##处理文件移动到备份区
@@ -87,22 +107,22 @@ getalreadybyday() {
 ## 只能清理指定日期
 
 ####配置文件内容begin
-#当前日期的前一天的时间 为处理日期 为避免误伤当前正在使用的 时间上必须获取服务器时间前一天的
-operatedate=$(date "+%Y%m%d" -d yesterday);
+#当前日期的6天前的时间 为处理日期 为避免误伤当前正在使用的 时间上必须获取服务器时间6天前的
+operatedate=$(date "+%Y%m%d" -d '6 day ago');
 #操作目录
-actionpath=/root/json_packages/diff/sourcepath
+actionpath=/root/json_packages/shelltest/inotify_path
 #备份目录
-backuppath=/root/json_packages/diff/backuppath
+backuppath=/root/json_packages/shelltest/backuppath
 #使用中的文件列表文件所在目录   里面的文件以20151211.txt 这样的形式存在
-usingpath=/root/json_packages/diff/usingfile
+usingpath=/root/json_packages/shelltest/usingpath/
 #文件后缀名
 usingext=.txt
 #当天要处理的前一天的比对文件  不需要手动写
 usingfile=$usingpath/$operatedate$usingext
 #比对文件中需要忽略前缀  只留下文件名
-usingexclude=/root/json_packages/diff/sourcepath/
+usingexclude=media/
 #已完成记录 相当于log日志目录
-alreadypath=/root/json_packages/diff/already
+alreadypath=/root/json_packages/shelltest/alreadypath
 #指定处理日期的文件锁名称 文件中包含处理的文件名 当做日志来用
 curlock=$operatedate
 #处理完成后再加上后缀表示已处理完
@@ -143,7 +163,7 @@ case "$1" in
             movetobackup;
             sleep 2;
             addexttolock;
-            rm -f /tmp/$operatedate
+            rm -f /tmp/$operatedate /tmp/2_$operatedate
         done
         echo "done";
         ;;
@@ -176,6 +196,7 @@ case "$1" in
         tput cup 3 15
         tput setaf 3
         echo "简介"
+        tput sgr0
 
         tput cup 6 15
         echo "day. 前一天的  第二个参数是指定的日期(如果不指定默认取昨天)"
