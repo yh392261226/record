@@ -78,7 +78,9 @@ rm -f /tmp/patch_diff1_$(date "+%Y%m%d" -d yesterday) /tmp/patch_diff2_$(date "+
 
 ##打包操作
 cd $tmp_path
-docompresstotargz $bak_prefix$(date "+%Y%m%d" -d yesterday)  $bak_prefix$(date "+%Y%m%d" -d yesterday)
+#下面这条 执行如果文件小可以  文件大 打包时间过长 后面的命令会执行  导致挪动的文件是空的 甚至直接就是目录
+#docompresstotargz $bak_prefix$(date "+%Y%m%d" -d yesterday)  $bak_prefix$(date "+%Y%m%d" -d yesterday)
+tar -zcvf $bak_prefix$(date "+%Y%m$d" -d yesterday)$endname  $bak_prefix$(date "+%Y%m%d" -d yesterday)
 
 #移动压缩包到nfs目录
 if [ ! -f $bak_prefix$(date "+%Y%m%d" -d yesterday)$endname ]; then
