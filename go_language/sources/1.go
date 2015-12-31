@@ -8,7 +8,7 @@ package main
  * 变量名 = 值
  *-----------------------
  * 或直接使用
- * 变量名 := 值
+ * 变量名 := 值   这种方式只能在函数内使用
  *
  */
 import (
@@ -29,6 +29,13 @@ func main() {
 	fmt.Println(bb)
 	fmt.Println("a is of type %T", aa)
 	fmt.Println("a is of type %T", bb)
+
+    //同时定义多个变量
+    var name1, name2, name3 int = 1, 2, 3
+    // name1, name2, name3 := 1, 2, 3
+    fmt.Println(name1)
+    fmt.Println(name2)
+    fmt.Println(name3)
 
 	//整形
 	var number int
