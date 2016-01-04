@@ -9,7 +9,8 @@ import (
 /**
  * 比较两个文件中相同的部分
  * 使用方法： go run 28.go test1 test2
- *
+ * map（数据结构的一种）
+ * map是用make函数创建的数据结构的一个引用。
  */
 func main() {
 	counts := make(map[string]int)
