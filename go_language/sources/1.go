@@ -1,4 +1,5 @@
 package main
+
 /**
  * 定义变量
  *=======================
@@ -10,32 +11,36 @@ package main
  * 或直接使用
  * 变量名 := 值   这种方式只能在函数内使用
  *
+ * 注释的方式在代码里都有了  不用单独写了
+ *  字符串连接符 是 +
+ *  字符串_ 是一个特殊的存在    所有赋值给_的 都将被丢弃 就是不存在的意思
  */
 import (
 	"fmt"
-	)
+)
+
 func main() {
 
 	//变量赋值
-	var mynum int = 999999999   //指定类型并直接赋值
+	var mynum int = 999999999 //指定类型并直接赋值
 	fmt.Println(mynum)
-	var mynum1 int				//先指定类型
-	mynum1 = 999999999			//再赋值
+	var mynum1 int     //先指定类型
+	mynum1 = 999999999 //再赋值
 	fmt.Println(mynum1)
-	mynum2 := 999999999			//不指定类型直接赋值 让程序自己判断类型
+	mynum2 := 999999999 //不指定类型直接赋值 让程序自己判断类型
 	fmt.Println(mynum2)
-	var aa, bb = 3, "string"		//不指定类型 声明并赋值 让程序自己判断类型
+	var aa, bb = 3, "string" //不指定类型 声明并赋值 让程序自己判断类型
 	fmt.Println(aa)
 	fmt.Println(bb)
 	fmt.Println("a is of type %T", aa)
 	fmt.Println("a is of type %T", bb)
 
-    //同时定义多个变量
-    var name1, name2, name3 int = 1, 2, 3
-    // name1, name2, name3 := 1, 2, 3
-    fmt.Println(name1)
-    fmt.Println(name2)
-    fmt.Println(name3)
+	//同时定义多个变量
+	var name1, name2, name3 int = 1, 2, 3
+	// name1, name2, name3 := 1, 2, 3
+	fmt.Println(name1)
+	fmt.Println(name2)
+	fmt.Println(name3)
 
 	//整形
 	var number int
@@ -56,26 +61,26 @@ func main() {
 	fmt.Println(buer)
 	fmt.Println(b)
 	//浮点型
-	var floatnum float64    //或者float32
+	var floatnum float64 //或者float32
 	floatnum = 1.101
 	floatn := 1.102
 	fmt.Println(floatnum)
 	fmt.Println(floatn)
 	//字节型
 	var bytes byte
-	bytes = 255    //最大支持到255
-	byt := -99990101010    //负数无限大啊
+	bytes = 255         //最大支持到255
+	byt := -99990101010 //负数无限大啊
 	fmt.Println(bytes)
 	fmt.Println(byt)
 	//多个变量声明
 	var (
-		nums int
-		text string
+		nums  int
+		text  string
 		check bool
 	)
 	nums = 10
 	text = "test string"
-	check= false
+	check = false
 	fmt.Println(nums)
 	fmt.Println(text)
 	fmt.Println(check)
