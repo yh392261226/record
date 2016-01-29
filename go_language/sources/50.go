@@ -5,7 +5,7 @@ import (
 )
 
 /**
- *
+ * test
  *
  */
 func main() {
