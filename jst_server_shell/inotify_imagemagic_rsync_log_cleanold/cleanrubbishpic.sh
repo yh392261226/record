@@ -1,12 +1,40 @@
 #!/bin/bash
 
+##############################################################################
+## 清理指定目录中的垃圾文件
+## 需要指定已使用中的图片列表
+## 只能清理指定日期
+##############################################################################
+
+####配置文件内容begin
+#当前日期的6天前的时间 为处理日期 为避免误伤当前正在使用的 时间上必须获取服务器时间6天前的
+operatedate=$(date "+%Y%m%d" -d '6 day ago');
+#操作目录
+actionpath=/root/json_packages/shelltest/inotify_path
+#备份目录
+backuppath=/root/json_packages/shelltest/backuppath
+#使用中的文件列表文件所在目录   里面的文件以20151211.txt 这样的形式存在
+usingpath=/root/json_packages/shelltest/usingpath/
+#文件后缀名
+usingext=.txt
+#当天要处理的前一天的比对文件  不需要手动写
+usingfile=$usingpath/$operatedate$usingext
+#比对文件中需要忽略前缀  只留下文件名
+usingexclude=media/
+#已完成记录 相当于log日志目录
+alreadypath=/root/json_packages/shelltest/alreadypath
+#指定处理日期的文件锁名称 文件中包含处理的文件名 当做日志来用
+curlock=$operatedate
+#处理完成后再加上后缀表示已处理完
+curlockext=.lock
+####配置文件内容end
+
+
 ##获取要操作的所有文件列表
 getoperatefileslist() {
     result=$(ls $actionpath | grep $operatedate|sed "s,${actionpath},,g");
     echo $result| sed 's, ,\n,g' > /tmp/$operatedate
 }
-
-
 
 #验证是否在文件中
 checkinfile() {
@@ -98,37 +126,6 @@ getalreadybyday() {
         echo $content|sed 's, ,\n,g'|sed -n "/${operatedate}/p";
     fi
 }
-
-
-
-##
-## 清理指定目录中的垃圾文件
-## 需要指定已使用中的图片列表
-## 只能清理指定日期
-
-####配置文件内容begin
-#当前日期的6天前的时间 为处理日期 为避免误伤当前正在使用的 时间上必须获取服务器时间6天前的
-operatedate=$(date "+%Y%m%d" -d '6 day ago');
-#操作目录
-actionpath=/root/json_packages/shelltest/inotify_path
-#备份目录
-backuppath=/root/json_packages/shelltest/backuppath
-#使用中的文件列表文件所在目录   里面的文件以20151211.txt 这样的形式存在
-usingpath=/root/json_packages/shelltest/usingpath/
-#文件后缀名
-usingext=.txt
-#当天要处理的前一天的比对文件  不需要手动写
-usingfile=$usingpath/$operatedate$usingext
-#比对文件中需要忽略前缀  只留下文件名
-usingexclude=media/
-#已完成记录 相当于log日志目录
-alreadypath=/root/json_packages/shelltest/alreadypath
-#指定处理日期的文件锁名称 文件中包含处理的文件名 当做日志来用
-curlock=$operatedate
-#处理完成后再加上后缀表示已处理完
-curlockext=.lock
-####配置文件内容end
-
 
 case "$1" in
     day)

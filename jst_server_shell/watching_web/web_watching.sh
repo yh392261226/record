@@ -22,7 +22,7 @@ inotify_bin=/usr/local/bin/inotifywait
 #守护进程脚本位置
 web_watchdog=/jst_server_shell/web_watch/web_watchdog.sh
 
-##列表形式配置文件 【文件按行读取 所以每个扩展名都是独立的一行 不需要.】
+##列表形式配置文件 【文件按行读取 所以每个扩展名都是独立的一行 如果是目录 必须以/结尾】
 #忽略文件列表
 excludelist=/jst_server_shell/web_watch/excludelist
 #需要处理的文件后缀列表
@@ -51,6 +51,9 @@ checkdoext() {
 checkexname() {
     checkname=$1
     for doext in $(cat $excludelist); do
+        if [ "$(dirname $checkname)/" = "$doext" ] && [ -d "$doext" ]; then
+            return 0
+        fi
         if [ "$doext" = "$checkname" ]; then
             return 0
         fi
@@ -78,13 +81,18 @@ dowatching() {
         #记录日志到当天的文件中
         if [ "$action" = "dolog" ]; then
             if [ "$iflog" = "true" ]; then
+                #如果是删除目录   都记录
+                if [ "$EVENT" = "DELETE,ISDIR" ]; then
+                    echo $(date +%H:%M:%S) $EVENT $DIR$FILENAME >> ${log_path}$(date "+%Y%m%d").log
+                fi
+
                 #验证文件名
                 checkexname $DIR$FILENAME
                 if [ "$?" = "1" ]; then #在忽略列表中 跳过
                     #验证文件后缀名
                     checkdoext $EXT
                     if [ "$?" = "0" ]; then  #在操作列表中就记录
-                        echo $(date +%H:%M:%S) $EVENT $DIR$FILENAME >> ${log_path}dowatching_$(date "+%Y%m%d")
+                        echo $(date +%H:%M:%S) $EVENT $DIR$FILENAME >> ${log_path}$(date "+%Y%m%d").log
                     fi
                 fi
             fi
