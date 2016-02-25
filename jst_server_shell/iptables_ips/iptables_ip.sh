@@ -13,7 +13,9 @@ iptables_rules=/etc/sysconfig/iptables #iptables默认路径
 attc_max=1000 #限定攻击最大次数值 默认值1000
 recordlog=./monior_ip_attc.log
 curdate=$(date|awk '{print $2" "$3}') #按照日志格式获取当前天
-today_attc_ips=$(cat $logfile|grep "$(echo $curdate)"|grep 'Failed password for'|awk -F'from' '{print $2}'|awk '{print $1}'|sort| uniq -c)
+today_attc_ips=$(cat $logfile|grep "$(echo $curdate)"|grep 'Failed password for\|authentication failure'|awk -F'from|rhost=' '{print $2}'|awk '{print $1}'|sort| uniq -c)
+today_attc_ips2=$(cat /var/log/messages |grep 'preauth'|awk -F'from' '{print $2}'|awk '{print $1}'|sort | uniq -c|grep -v 'socket'|sed 's/://g')
+today_attc_ips=$today_attc_ips$today_attc_ips2
 ifblack=0 #勿动
 docounter=0 #计数器
 #echo $today_attc_ips
