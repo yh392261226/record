@@ -1,0 +1,6 @@
+version:1.0.2
+configure:updated
+Update content:
+Add 2 functions:
+1. Added ignore ports of check, you could define some ports like 21,2121 that you wantn't check;
+2. Added upgrade function of CCkiller.
