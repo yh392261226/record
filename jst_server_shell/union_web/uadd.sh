@@ -96,9 +96,13 @@ cp -r $code_source/* $web_path/$newusername/htdocs/
 
 ### 把一些软连接给连进来 比如media目录
 ln -s $public_path $web_path/$newusername/htdocs/media
+
 if [ "$?" = "0" ]; then
 	echo "8:copy the code for $newusername ok!";
 fi
+### 复制完程序代码后 再赋一次权限
+chown -R ${newusername}:${group_name} $web_path/$newusername/htdocs/
+chmod -R 777 $web_path/$newusername/htdocs/
 
 ###设置密码 9
 passwd $newusername
