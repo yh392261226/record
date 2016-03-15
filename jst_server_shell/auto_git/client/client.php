@@ -2,6 +2,7 @@
 /**
  * 接收用户传过来的要提交的内容并写入文件
  */
+header("Content-type:text/html; charset=utf-8");
 $logpath = './watching_path'; //生成文件所在目录 即shell的监听目录
 if (!empty($_POST['files']) && '' != trim($_POST['uname']))
 {
