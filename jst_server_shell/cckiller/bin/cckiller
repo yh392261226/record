@@ -95,23 +95,23 @@ fi
 
 check_ip()
 {
-    
+
     #check_ip if in the $IGNORE_IP_LIST
     grep $CURR_LINE_IP $IGNORE_IP_LIST >/dev/null && return 0
-    
+
     #check ip belongs to IP subnet
     result=$(awk -F'[./]' -v ip=$1 '
     {for (i=1;i<=int($NF/8);i++){a=a$i"."}
-    if (index(ip, a)==1){split( ip, A, ".");if (A[4]<2^(8-$NF%8)) print "hit"} 
+    if (index(ip, a)==1){split( ip, A, ".");if (A[4]<2^(8-$NF%8)) print "hit"}
     a=""}' $IGNORE_IP_LIST )
-    
+
     if [[ "$result" = "hit" ]]
     then
         return 0
     else
         return 1
     fi
-    
+
 }
 
 show_stats()
@@ -146,26 +146,26 @@ cc_check()
 	while read line; do
 		CURR_LINE_CONN=$(echo $line | cut -d" " -f1)
 		CURR_LINE_IP=$(echo $line | cut -d" " -f2)
-		
+
 # 		IGNORE_BAN=$(grep -c $CURR_LINE_IP $IGNORE_IP_LIST)
 
         check_ip $CURR_LINE_IP
-        
+
         if [ $? -eq 0 ]; then
 			continue
  		fi
-  		
+
 # 		grep $CURR_LINE_IP $IGNORE_IP_LIST >/dev/null && continue
 # 		if [ $IGNORE_BAN -ge 1 ]; then
 # 			continue
 # 		fi
 		IP_BAN_NOW=1
-		
+
 		banip $CURR_LINE_IP
 		if [ $? -eq 1 ]; then
 			continue
 		fi
-		
+
 		echo "[`date "+%Y-%m-%d %H:%M:%S"`]: Banned $CURR_LINE_IP with $CURR_LINE_CONN connections" | tee -ai $LOG_FILE >> $BANNED_IP_MAIL
 		echo $CURR_LINE_IP >> $BANNED_IP_LIST
 		#echo $CURR_LINE_IP >> $IGNORE_IP_LIST
@@ -178,7 +178,7 @@ cc_check()
 		fi
 		unbanip
 	else
-		rm -f $BANNED_IP_LIST $BANNED_IP_MAIL $BAD_IP_LIST 
+		rm -f $BANNED_IP_LIST $BANNED_IP_MAIL $BAD_IP_LIST
 	fi
 }
 
@@ -218,11 +218,11 @@ while [ $1 ]; do
 		 '--banip' | '-b' )
 		    banip $2
 		    break
-			;;   
+			;;
 		 '--unban' | '-u' )
 		    unbanip $2
 		    break
-			;;	
+			;;
 		 '--process' | '-p' )
 		    process_mode $SLEEP_TIME
 		    break

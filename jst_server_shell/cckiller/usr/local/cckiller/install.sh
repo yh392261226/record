@@ -19,7 +19,7 @@ check_env()
     #wget -V || yum install -y wget
     which sendmail || yum install -y sendmail
     mailx -V || yum install -y mailx
-    
+
 }
 
 header()
@@ -81,9 +81,9 @@ Update()
     conf_env
     Wget $Base_Dir/version.txt https://zhangge.net/wp-content/uploads/files/cckiller/version.txt
     Configure=$(awk -F":" '/configure/ {print $2}' $Base_Dir/version.txt)
-    
+
     FINAL_VER=$(awk -F":" '/version/ {print $2}' $Base_Dir/version.txt)
-    
+
     if [[ -f $Base_Dir/ck.conf ]]
     then
         source $Base_Dir/ck.conf
@@ -91,7 +91,7 @@ Update()
         echo "Error: Not Found $Base_Dir/ck.conf, Please install CCkiller Again."
         exit 1
     fi
-    
+
     if [[ $DKVer != $FINAL_VER ]]
     then
         echo =============================================================================
@@ -142,7 +142,7 @@ Configure()
 	    echo "  Adminstrator Email: $EMAIL_TO"
 	    echo
         echo "  Connections  Allow: $NO_OF_CONNECTIONS"
-        echo 
+        echo
         echo "  Ignore Port: Null                    "
         echo "========================================"
         echo "Press any key to continue..."
@@ -188,7 +188,7 @@ Configure()
     	echo "  Adminstrator Email: $EMAIL_TO"
     	echo
         echo "  Connections  Allow: $NO_OF_CONNECTIONS"
-        echo 
+        echo
         echo "  Ignore Port: $IGNORE_PORT"
         echo "========================================"
         echo "Press any key to continue..."
@@ -247,19 +247,19 @@ install()
     check_env >/dev/null 2>&1
     echo -n '.'
     Wget $Base_Dir/cckiller https://zhangge.net/wp-content/uploads/files/cckiller/cckiller.sh?ver=$(date +%M|md5sum|awk '{print $1}')
-    
+
     test -d /etc/init.d || mkdir -p /etc/init.d
     Wget /etc/init.d/cckiller https://zhangge.net/wp-content/uploads/files/cckiller/cckiller_service.sh?ver=$(date +%M|md5sum|awk '{print $1}')
     chmod 0755 $Base_Dir/cckiller
-    
+
     chmod 0755 /etc/init.d/cckiller
-    
+
     test -f /etc/rc.d/rc.local && echo "/etc/init.d/cckiller start" >>/etc/rc.d/rc.local
-        
+
     ln -sf $Base_Dir/cckiller /bin/cckiller
-    
+
     cp -f $0 $Base_Dir/
-    
+
     #ifconfig |awk -F '[ :]+' '/inet addr/{print $4}' > /usr/local/cckiller/ignore.ip.list
     if [[ -z $1 ]]
     then
@@ -278,7 +278,7 @@ install()
         /etc/init.d/cckiller restart
         echo "Update success."
     fi
-    
+
     echo
     echo 'Your can post comments or suggestions on https://zhangge.net/5066.html'
     echo
@@ -334,11 +334,11 @@ while [ $1 ]; do
 		'--update' | '-u' )
 			Update
 			exit
-			;;	
+			;;
 		'--config' | '-c' )
 			Configure config
 			exit
-			;;	
+			;;
 		* )
 			showhelp
 			exit
