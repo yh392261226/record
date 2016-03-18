@@ -37,7 +37,8 @@ if (!empty($_POST['files']) && '' != trim($_POST['uname']))
 <html>
     <head>
         <meta http-equiv="Content-type" content="text/html" charset="utf-8" />
-        <title></title>
+        <title>auto_git</title>
+        <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
     </head>
     <body>
         <form method="post" name="form1" action="">
@@ -50,7 +51,15 @@ if (!empty($_POST['files']) && '' != trim($_POST['uname']))
             <p>
             文件:<textarea name="files" style="margin: 0px; height: 260px; width: 600px;"></textarea> *必填项 每行一个文件或目录
             </p>
-            <input type="submit" name="submit" value=" 提 交 " / >
+            <input type="submit" name="submit" value=" 提 交 " onclick="javascript:checkResult();" / >
         </form>
+        <script type="text/javascript">
+            $(function(){
+                function checkResult() {
+                    $(this).form.submit();
+                    $.ajax();
+                }
+            })
+        </script>
     </body>
 </html>
