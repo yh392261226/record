@@ -105,6 +105,12 @@ elseif (!empty($_POST) && trim($_POST['act']) == 'dologin')
         </form>
         <?php
         }
+        if (isset($_GET['show']) && intval($_GET['show']) == 1)
+        {
+            $denies=file_get_contents('/etc/hosts.deny');
+            echo "<pre>";
+            print_r($denies);
+        }
         ?>
     </body>
 </html>
