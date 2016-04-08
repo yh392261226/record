@@ -16,6 +16,7 @@ login_username=$USER                                                          		
 login_datetime=$(date +"%Y-%m-%d %H:%M:%S")                                   			#登录时间
 login_uid=$UID                                                                			#登录用户名
 login_ip=$(w |awk '{print $3}'|grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}'|sort |uniq) 	#登录ip
+exec_ip=$(who am i |grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}')                         #执行ip
 server_ip=$(ifconfig eth0 |grep "inet addr"| cut -f 2 -d ":"|cut -f 1 -d " ") 			#服务器ip
 server_name=$(hostname)                                                       			#服务器名称
 server_type=$(uname)                                                          			#系统类型
@@ -29,4 +30,4 @@ login_logout() {
 }
 
 #每一条用户操作发送
-export PROMPT_COMMAND='{ `history 1 | { read x cmd; $curl_bin -s -d "uid=$login_uid" -d "uname=$login_username" -d "server_ip=$server_ip" -d "server_name=$server_name" -d "exec_command=$cmd" -d "exec_ip=$login_ip" -d "datetime=$login_datetime" $receive_server >> /dev/null  ; }`; }'  #用户上一条操作命令
+export PROMPT_COMMAND='{ `history 1 | { read x cmd; $curl_bin -s -d "uid=$login_uid" -d "uname=$login_username" -d "server_ip=$server_ip" -d "server_name=$server_name" -d "exec_command=$cmd" -d "exec_ip=$exec_ip" -d "datetime=$login_datetime" $receive_server >> /dev/null  ; }`; }'  #用户上一条操作命令
