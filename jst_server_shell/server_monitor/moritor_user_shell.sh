@@ -15,7 +15,9 @@ server_bit=$(file /sbin/init | awk '{print $3}')                              		
 #用户登录/退出信息发送
 login_logout() {
 	exec_command=$1
-    $curl_bin -s -d "user=$login_username" -d "uid=$login_uid" -d "server_ip=$server_ip" -d "server_name=$server_name" -d "server_version=$server_version" -d "server_bit=$server_bit" -d "exec_ip=$login_ip" -d "login_datetime=$login_datetime" -d "exec_command=$exec_command"  $receive_server >> /dev/null
+    if [ "" != "$login_ip" ]; then
+        $curl_bin -s -d "user=$login_username" -d "uid=$login_uid" -d "server_ip=$server_ip" -d "server_name=$server_name" -d "server_version=$server_version" -d "server_bit=$server_bit" -d "exec_ip=$login_ip" -d "login_datetime=$login_datetime" -d "exec_command=$exec_command"  $receive_server >> /dev/null
+    fi
 }
 #把该脚本的地址加入到/etc/profile里
 #login_logout login   #这条加入到 ~/.bashrc里即可
