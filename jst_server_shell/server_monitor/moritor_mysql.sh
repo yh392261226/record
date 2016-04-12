@@ -6,7 +6,7 @@
 #######################################################################
 log_path=/www/jst_server_shell/moritor_mysql/log  #日志地址
 cur_date=$(date "+%Y-%m-%d")
-mysql_bin=/usr/local/mysql/bin                           #mysql的bin路径
+mysql_bin=/usr/local/mysql/bin/mysql              #mysql的bin路径
 mysql_user=root
 mysql_host=127.0.0.1
 mysql_port=3306
