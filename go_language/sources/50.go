@@ -1,11 +1,11 @@
 package main
 
-import fm "fmt"
+import p "fmt"
 
 /**
  * alias 别名
  *
  */
 func main() {
-	fm.Println("this is a test")
+	p.Println("this is a test")
 }

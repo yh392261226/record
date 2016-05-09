@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import echo "fmt"
 
 func main() {
-
+	echo "test"
 }
