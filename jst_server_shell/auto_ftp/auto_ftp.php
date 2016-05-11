@@ -29,11 +29,13 @@ if (isset($_POST['act']) && trim($_POST['act']) == 'ftp'){
         $action = file_put_contents($log_path . date('Y-m-d_H_i_s') . trim($_SESSION['username']) . '.do', 'username=' . trim($_SESSION['username']) . "\n" . 'server=' . $_POST['server'] . "\n" . 'usetime=' . $_POST['usetime']) . 'dotime=' . date('Y-m-d H:i:s');
         if (!$action)
         {
-            echo "Faile";exit;
+						echo '<meta http-equiv="refresh" content="3;url=?1">';
+            echo "<b>执行失败</b>，3秒后自动跳转。 如果您的浏览器没有跳转，请<a href='?1'>点击</a>";exit;
         }
         else
         {
-            echo "Success";exit;
+						echo '<meta http-equiv="refresh" content="3;url=?1">';
+            echo "<b>执行成功</b>，3秒后自动跳转。 如果您的浏览器没有跳转，请<a href='?1'>点击</a>";exit;
         }
     }
     else
