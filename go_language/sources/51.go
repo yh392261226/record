@@ -1,7 +1,14 @@
 package main
 
-import echo "fmt"
+/**
+ * 类似php的EOT
+ * 反引号内的内容不转义
+ */
+
+import p "fmt"
 
 func main() {
-	echo "test"
+	str := `this is 
+	a long string`
+	p.Println(str)
 }
