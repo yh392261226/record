@@ -4,6 +4,7 @@
  *
  */
  session_start();
+//配置文件
  $userlists = array(
      array(
          'ip' =>'server1',
@@ -16,25 +17,50 @@
          'userpass' => 'pass2',
      ),
  );
-
+ // 每个月的限制日
+ $unopenday = array(
+     '12',   //每个月的12号为限制日
+     '0',
+ );
+//激活shell的log地址
 $log_path = '/data/auto_ftp/log/';
+
+function getIPByName($username, $userlists)
+{
+    if ('' != $username && !empty($userlists))
+    {
+        foreach ($userlists as $key => $val)
+        {
+            if ($val['username'] == $username)
+            {
+                return $val['ip'];
+            }
+        }
+    }
+    return '';
+}
 
 if (isset($_POST['act']) && trim($_POST['act']) == 'ftp'){
     //已经登录 落地用户输入数据
     if (isset($_SESSION['loginmark']) && intval($_SESSION['loginmark']) == '1')
     {
+        //验证是否在限制日内
+        if (in_array(date('d'), $unopenday))
+        {
+            echo "<script>alert('今天是限制日 不能开启ftp !!!');window.close();</script>";exit;
+        }
         $_POST['usetime'] = isset($_POST['usetime']) ? intval($_POST['usetime']) : '30';
         $_POST['server']  = isset($_POST['server'])  ? trim($_POST['server'])    : (isset($_SESSION['serverip']) ? $_SESSION['serverip'] : '');
         $action = false;
         $action = file_put_contents($log_path . date('Y-m-d_H_i_s') . trim($_SESSION['username']) . '.do', 'username=' . trim($_SESSION['username']) . "\n" . 'server=' . $_POST['server'] . "\n" . 'usetime=' . $_POST['usetime']) . 'dotime=' . date('Y-m-d H:i:s');
         if (!$action)
         {
-						echo '<meta http-equiv="refresh" content="3;url=?1">';
+			echo '<meta http-equiv="refresh" content="3;url=?1">';
             echo "<b>执行失败</b>，3秒后自动跳转。 如果您的浏览器没有跳转，请<a href='?1'>点击</a>";exit;
         }
         else
         {
-						echo '<meta http-equiv="refresh" content="3;url=?1">';
+			echo '<meta http-equiv="refresh" content="3;url=?1">';
             echo "<b>执行成功</b>，3秒后自动跳转。 如果您的浏览器没有跳转，请<a href='?1'>点击</a>";exit;
         }
     }
@@ -56,7 +82,7 @@ else if (isset($_POST['act']) && trim($_POST['act']) == 'login')
             {
                 $_SESSION['username'] = $_POST['username'];
                 $_SESSION['loginmark'] = '1';
-                $_SESSION['serverip'] = $userlists[array_search($_POST['username'], $userlists)['ip']];
+                $_SESSION['serverip'] = getIPByName($_POST['username'], $userlists);
 
                 header("Location:?1");
             }
