@@ -14,7 +14,8 @@ for i in $(cat $logfile); do
 	if [ "$tmpcount" -eq "0" ] && [ "$i" -ge "$minscore" ]; then
 		tmptimes=$i
 	elif [ "$tmpcount" -eq "1" ] && [ "$tmptimes" -ge "1" ]; then
-		echo $tmptimes $i $(curl -s http://ip138.com/ips138.asp\?ip\=$i\&action\=2 |iconv -f gb2312 -t UTF-8|grep '<td align="center"><ul class="ul1"><li>'|awk '{print $3}'|awk -F'：' '{print $2}')
+		#echo $tmptimes $i $(curl -s http://ip138.com/ips138.asp\?ip\=$i\&action\=2 |iconv -f gb2312 -t UTF-8|grep '<td align="center"><ul class="ul1"><li>'|awk '{print $3}'|awk -F'：' '{print $2}')
+	        echo $tmptimes $i $(curl -s http://test.ip138.com/query/?ip=$i&datatype=txt)
 	fi
 
 	tmpcount=`expr $tmpcount + 1`
