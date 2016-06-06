@@ -22,17 +22,19 @@ tmpbacktime=$(date "+%H:%M:%S" -d "$ROLLBACKTIME minutes ago")
 cat $LOGFILE | grep "$CURDATE" | sed -n "/${tmpbacktime}/,/${CURTIME}/p" | awk '{print $1}' | grep -v "$EXIP" | grep -v "$EXKEYWORDS" | sort | uniq -c | sort -nr | awk '$1 > '${SAMEMINUTETIMES}' {print $2}' > ${RECORDLOG}/tmp_record.log
 exit 1
 for ip in $(cat ${RECORDLOG}/tmp_record.log); do
-  case "$BLOCKTYPE"
-    1)
-      iptables -I INPUT -s $ip -j DROP
-      ;;
-    2)
-      csf --tempdeny $ip $TEMPDENYSEC             #临时禁止该ip sec秒
-      ;;
-    3)
-      csf -d $ip
-      ;;
-  esac
+    if [ "" != "$ip" ]; then
+      case "$BLOCKTYPE"
+        1)
+          iptables -I INPUT -s $ip -j DROP
+          ;;
+        2)
+          csf --tempdeny $ip $TEMPDENYSEC             #临时禁止该ip sec秒
+          ;;
+        3)
+          csf -d $ip
+          ;;
+      esac
+    fi
 done
 
 if [ "$BLOCKTYPE" = "1" ]; then
@@ -40,3 +42,4 @@ if [ "$BLOCKTYPE" = "1" ]; then
   service iptables restart
 fi
 
+echo "" > ${RECORDLOG}/tmp_record.log
