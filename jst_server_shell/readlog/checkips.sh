@@ -9,7 +9,7 @@ minscore=100                         #最小访问次数
 tmpfile=/tmp/tmp_today_ips.log        #临时日志文件位置
 
 ###先打出来一个临时的文件
-cat $logfile | awk '{print $1}' | sort | uniq -c > $tmpfile
+cat $logfile | awk '{print $1}' | sort | uniq -c | sort -nr > $tmpfile
 ###解析
 tmpcount=0
 tmptimes=0
