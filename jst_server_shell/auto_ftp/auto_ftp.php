@@ -40,6 +40,15 @@ function getIPByName($username, $userlists)
     return '';
 }
 
+function touchToday() 
+{
+	if(!file_exists($log_path))
+	{
+		return 'error:not exists log path!';
+	}
+	return file_put_contents($log_path . '/restart_' . date('Y-m-d-H'), date('Y-m-d H:i:s'), FILE_APPEND);
+}
+
 if (isset($_POST['act']) && trim($_POST['act']) == 'ftp'){
     //已经登录 落地用户输入数据
     if (isset($_SESSION['loginmark']) && intval($_SESSION['loginmark']) == '1')
@@ -118,6 +127,16 @@ if (isset($_SESSION['loginmark']) && intval($_SESSION['loginmark']) == '1')
         <div style="color:red;">现在server1的ftp状态是：<?php echo $ftp2status;?></div>
         <div style="color:green;">现在server2的ftp状态是：<?php echo $ftp1status;?></div>
 <?php
+}
+elseif (isset($_SESSION['loginmark']) && intval($_SESSION['loginmark']) == '1' &&  isset($_GET['act']) && trim($_GET['act']) == 'restart')
+{
+	if (touchToday())
+	{
+			echo '<meta http-equiv="refresh" content="3;url=?1">';
+      echo "<b>执行成功</b>，3秒后自动跳转。 如果您的浏览器没有跳转，请<a href='?1'>点击</a>";exit;
+	}
+	echo '<meta http-equiv="refresh" content="3;url=?1">';
+  echo "<b>执行失败</b>，3秒后自动跳转。 如果您的浏览器没有跳转，请<a href='?1'>点击</a>";exit;
 }
 else
 {
