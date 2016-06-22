@@ -37,7 +37,8 @@ if [ "$lastlinetime" -le "$lastdotime" ]; then
 fi
 
 ###执行监听error log文件 判断是否需要操作
-tmptimes=$($TAILBIN -n $READLINES $LOGFILE | grep "$CURDATE" | grep "$KEYWORDS" | awk '$2>="$CURTIME" && $2<="$BEFORETIME"' |wc -l)
+#tmptimes=$($TAILBIN -n $READLINES $LOGFILE | grep "$CURDATE" | grep "$KEYWORDS" | awk '$2>="$CURTIME" && $2<="$BEFORETIME"' |wc -l)
+tmptimes=`/usr/bin/tail -n 1000 $LOGFILE | grep "$CURDATE" | grep "$KEYWORDS" | awk '$2" <= $CURTIME && "'$2'" >= $BEFORETIME"' | wc -l`
 if [ "$tmptimes" -ge "$MAXTIMES" ]; then
   service $FPMBIN restart
   if [ "$?" = "0" ]; then
