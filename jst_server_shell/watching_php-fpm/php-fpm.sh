@@ -29,16 +29,19 @@ lastlinetime=$(date -d $($TAILBIN -n 1 $LOGFILE | grep "$CURDATE" | awk '{print 
 lastdotime=$(cat $LASTDOLOG)
 
 ###将最近一次日志的最底行的时间记录
-echo $lastlinetime > $LASTDOLOG
+#echo $lastlinetime > $LASTDOLOG
 
 ###最底的时间的秒数小于等于上次操作时记录的时间秒数 则无新日志 退出脚本
-if [ "$lastlinetime" -le "$lastdotime" ]; then
-  exit 1
-fi
+#if [ "$lastlinetime" -le "$lastdotime" ]; then
+#  exit 1
+#fi
 
 ###执行监听error log文件 判断是否需要操作
 #tmptimes=$($TAILBIN -n $READLINES $LOGFILE | grep "$CURDATE" | grep "$KEYWORDS" | awk '$2>="$CURTIME" && $2<="$BEFORETIME"' |wc -l)
-tmptimes=`/usr/bin/tail -n 1000 $LOGFILE | grep "$CURDATE" | grep "$KEYWORDS" | awk '$2" <= $CURTIME && "'$2'" >= $BEFORETIME"' | wc -l`
+#tmptimes=`/usr/bin/tail -n 1000 $LOGFILE | grep "$CURDATE" | grep "$KEYWORDS" | awk '$2" <= $CURTIME && "'$2'" >= $BEFORETIME"' | wc -l`
+echo "$TAILBIN -n 1000 $LOGFILE | grep \"$CURDATE\" | grep \"$KEYWORDS\" | awk '\$2 < \"$CURTIME\" && \$2 > \"$BEFORETIME\"' | wc -l" > $RECORDLOGPATH/lastcommand
+chmod +x $RECORDLOGPATH/lastcommand
+tmptimes=$(bash $RECORDLOGPATH/lastcommand)
 if [ "$tmptimes" -ge "$MAXTIMES" ]; then
   service $FPMBIN restart
   if [ "$?" = "0" ]; then
