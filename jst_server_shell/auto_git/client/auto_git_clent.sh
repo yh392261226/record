@@ -24,8 +24,9 @@ do
 		filedir=$(cat $DIR$FILENAME | grep 'filedir=' | cut -d '=' -f 2)
 		message=$(cat $DIR$FILENAME | grep 'commit=' | cut -d '=' -f 2)
 		files=$(cat $DIR$FILENAME | grep 'files=' | cut -d '=' -f 2)
+        action=$(cat $DIR$FILENAME | grep 'action=' | cut -d '=' -f 2)
 		cd $filedir
-		$git_bin add $files
+		$git_bin $action $files
 		$git_bin commit -m "$message"
 		$git_bin push -u origin master
 		if [ "$?" = "0" ]; then

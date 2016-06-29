@@ -20,9 +20,12 @@ if (!empty($_POST['files']) && '' != trim($_POST['uname']))
         }
     }
     unset($key, $val, $tmpfilescheck);
-	  if (!isset($_POST['commit']) || trim($_POST['commit']) == '') $_POST['commit'] = trim($_POST['uname']) . date("Y-m-d H:i:s");
-	  if (!isset($_POST['filedir']) || trim($_POST['filedir']) == '') $_POST['filedir'] = $filedir;
-    $message = 'commit=' . $_POST['commit'] . "\n" . 'uname=' . trim($_POST['uname']) . "\n" . 'filedir=' . trim($_POST['filedir']) . "\n" . 'files=' . preg_replace("/\s+/", ' ', $_POST['files']) . "\n";
+	if (!isset($_POST['commit']) || trim($_POST['commit']) == '') $_POST['commit'] = trim($_POST['uname']) . date("Y-m-d H:i:s");
+	if (!isset($_POST['filedir']) || trim($_POST['filedir']) == '') $_POST['filedir'] = $filedir;
+    $uname = isset($_POST['uname']) ? trim($_POST['uname']) : 'who';
+    $action = isset($_POST['action']) ? trim($_POST['action']) : 'add';
+
+    $message = 'commit=' . $_POST['commit'] . "\n" . 'uname=' . trim($_POST['uname']) . "\n" . 'action=' . trim($_POST['action']) . "\n" . 'filedir=' . trim($_POST['filedir']) . "\n" . 'files=' . preg_replace("/\s+/", ' ', $_POST['files']) . "\n";
     if (!empty($message))
     {
         $result = file_put_contents($logpath . '/' . trim($_POST['uname']) . '_' . date('Ymd_H-i-s') . '.wait', $message);
@@ -41,9 +44,12 @@ if (!empty($_POST['files']) && '' != trim($_POST['uname']))
         <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
     </head>
     <body>
-        <form method="post" name="form1" action="">
+        <form method="post" name="form" id="form" action="">
             <p>
             用户:<input type="text" name="uname" value="" /> *必填项
+            </p>
+            <p>
+            操作:<label><input type="radio" name="action" checked="true" value="add">添加</label> &nbsp;&nbsp;<label><input type="radio" name="action" id="rm" value="rm">删除</label>
             </p>
             <p>
             注释:<input type="text" name="commit" value="" />
@@ -51,13 +57,21 @@ if (!empty($_POST['files']) && '' != trim($_POST['uname']))
             <p>
             文件:<textarea name="files" style="margin: 0px; height: 260px; width: 600px;"></textarea> *必填项 每行一个文件或目录
             </p>
-            <input type="submit" name="submit" value=" 提 交 " onclick="javascript:checkResult();" / >
+            <input type="button" name="button" value=" 提 交 " onclick="javascript:checkResult();" / >
         </form>
         <script type="text/javascript">
             $(function(){
                 function checkResult() {
-                    $(this).form.submit();
-                    $.ajax();
+                    if (document.getElementById("rm").checked) {
+                        var res=confirm('删除操作很危险，确认么？');
+                        if (!res) {
+                            return false;
+                        }else{
+                            document.getElementById('form').submit();
+                        }
+                    } else {
+                        document.getElementById('form').submit();
+                    }
                 }
             })
         </script>
