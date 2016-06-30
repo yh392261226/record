@@ -10,6 +10,7 @@ inotify_ext=wait                           							#监听文件后缀名
 git_bin=/usr/bin/git                       							#git命令位置
 web_path=/www/server_test  					                        #web目录
 sleep_seconds=30 													#默认等待秒数 等的少了容易那边没提交完 默认可以给300秒
+log_path=/www/log                                                   #日志路径
 
 ##监听并操作
 $inotify_bin -qmre $inotify_type $inotify_path --format '"%w" "%f" "%e"'| while read DIR FILENAME EVENT TIME;
@@ -22,7 +23,7 @@ do
 		##获取到文件
 		cd $web_path
 		sleep $sleep_seconds
-		$git_bin pull
+        $git_bin pull 2>&1 | tee $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #将结果集打印到日志文件
 		if [ "$?" = "0" ]; then
 			finishname=$(echo $FILENAME | cut -d '.' -f 1)'.finished'
 			mv $DIR$FILENAME $DIR$finishname

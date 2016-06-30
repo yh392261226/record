@@ -3,13 +3,14 @@
 # 监听目录 根据新生成的文件内容来确定用户修改的文件都有哪些 并git push 这些文件
 # 完成的会自动把.wait后缀名改成.finished
 #
-inotify_path=/www/watching_path                #监控的目录
+inotify_path=/www/watching_path                                     #监控的目录
 inotify_bin=/usr/local/bin/inotifywait      						#命令位置
 inotify_type=create                         						#监听状态
 inotify_ext=wait                           							#监听文件后缀名
 git_bin=/usr/bin/git                       							#git命令位置
 curl_bin=/usr/bin/curl 												#curl命令位置
-server=http://www.test.com/interface.php 								#server端的链接地址
+server=http://www.test.com/interface.php 							#server端的链接地址
+log_path=/www/log                                                   #执行结果日志
 
 ##监听并操作
 $inotify_bin -qmre $inotify_type $inotify_path --format '"%w" "%f" "%e"'| while read DIR FILENAME EVENT TIME;
@@ -28,13 +29,18 @@ do
 		cd $filedir
 		$git_bin $action $files
 		$git_bin commit -m "$message"
-		$git_bin push -u origin master
+        $git_bin push -u origin master 2>&1 | tee $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #打印出结果集
 		if [ "$?" = "0" ]; then
 			##发送php信号 给服务端
 			finishname=$(echo $FILENAME | cut -d '.' -f 1)'.finished'
 			mv $DIR$FILENAME $DIR$finishname
 			$curl_bin -d 'uname='$uname -d 'filename='$(echo $FILENAME | cut -d '.' -f 1) $server
-			echo "ok";
+            if [ "$?" = "0" ]; then
+			    echo "ok";
+            else
+                echo "fail" >> $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #失败的话也打印出结果集
+                echo "fail";
+            fi
 		fi
     fi
 done
