@@ -2,13 +2,81 @@
 /**
  * 接收用户传过来的要提交的内容并写入文件
  */
+session_start();
 header("Content-type:text/html; charset=utf-8");
 $logpath = './watching_path';                           //日志地址
 $filedir='/usr/local/nginx/html/soufeel-com-project';   //文件地址
 $rmcheckdir=true;                                       //action为rm的时候是否允许删除文件夹 true不允许 false允许
 $server='http://www.test.com/interface.php';            //server端的链接地址
+$users_arr = array(
+    100 => array(
+        'loginname' => 'jer',
+        'loginpass' => '5f7c1fbe0c096378f015584c40d5637b', //mGVz9#2z9Q{V@VrZ
+        ),
+    101 => array(
+        'loginname' => 'jack',
+        'loginpass' => '844965f68cd2cad451b1e3b07c6e5625', //d,3Tsk8iZ9xn+&gM
+        ),
+    102 => array(
+        'loginname' => 'jenny',
+        'loginpass' => 'ef25ada3e04727dfcb1f8df559942961', //x2MHhaMb6juL4$/;
+        ),
+    103 => array(
+        'loginname' => 'lery',
+        'loginpass' => '615127514be11a0fe7c51adbdddc4943', //^7FUFeu@4V]Dd3LU
+        ),
+    104 => array(
+        'loginname' => 'ledon',
+        'loginpass' => 'da50acd1d6db0b43cd6c084fb0b7b47f', //4WK.P@NJ[86MGWog
+        ),
+    105 => array(
+        'loginname' => 'phoebe',
+        'loginpass' => 'f15459b08333a06b136c6cf123dc58ac', //8R9]bdP@P8zpLn%A
+        ),
+    106 => array(
+        'loginname' => 'vine',
+        'loginpass' => 'c6f92f54a5afbd9c695218d071e7b882', //8R77bdP@P8zpLn%A
+        ),
+);
+if (!isset($_SESSION['uid']) || intval($_SESSION['uid']) < 100)
+{
+	if (isset($_POST['act']) && trim($_POST['act']) == 'login' && isset($_POST['loginname']) && '' != trim($_POST['loginame']) && isset($_POST['loginpass']) && '' != trim($_POST['loginpass']))
+	{
+		foreach ($users_arr as $key => $val)
+		{
+			if (trim($_POST['loginname']) == $val['loginname'] && trim($_POST['loginnpass']) == $val['loginpass'])
+			{
+				$_SESSION['uid'] = $key;
+				$_SESSION['username'] = md5($val['loginname']);
+				header("Location:?1");
+			}
+		}
+	}
+?>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html" charset="utf-8" />
+		<title>登录</title>
+	</head>
+	<body>
+		<form  method="post" name="login-form" action="" >
+			<input type="hidden" name="act" value="login">
+			<p> 用户:
+				<input type="text" name="loginname" value="" />
+			<p>
+			<p> 密码:
+				<input type="text" name="loginpass" value="" />
+			</p>
+			<input type="submit" name="submit" value=" 登 录 " / >
+		</form>
+	</body>
+</html>
+<?php
+    exit;
+}
 
-if (!empty($_POST['files']) && '' != trim($_POST['uname']))
+//if (!empty($_POST['files']) && '' != trim($_POST['uname']))
+if (!empty($_POST['files']))
 {
 	$tmpfilescheck = explode(' ', preg_replace("/\s+/", ' ', $_POST['files']));
     $action = isset($_POST['action']) ? trim($_POST['action']) : 'add';
@@ -32,7 +100,7 @@ if (!empty($_POST['files']) && '' != trim($_POST['uname']))
     unset($key, $val, $tmpfilescheck);
 	if (!isset($_POST['commit']) || trim($_POST['commit']) == '') $_POST['commit'] = trim($_POST['uname']) . date("Y-m-d H:i:s");
 	if (!isset($_POST['filedir']) || trim($_POST['filedir']) == '') $_POST['filedir'] = $filedir;
-    $uname = isset($_POST['uname']) ? trim($_POST['uname']) : 'who';
+   	$uname = isset($_POST['uname']) ? trim($_POST['uname']) : $_SESSION['username'];
 
     $message = 'commit=' . $_POST['commit'] . "\n" . 'uname=' . $uname . "\n" . 'action=' . $action . "\n" . 'filedir=' . trim($_POST['filedir']) . "\n" . 'files=' . preg_replace("/\s+/", ' ', $_POST['files']) . "\n";
     if (!empty($message))
@@ -68,9 +136,7 @@ if (isset($_GET['act']) && trim($_GET['act']) == 'viewlog' && trim($_GET['lognam
     </head>
     <body>
         <form method="post" name="form" id="form" action="">
-            <p>
-            用户:<input type="text" name="uname" value="" /> *必填项
-            </p>
+            <input type="hidden" name="uname" value="<?php echo $_SESSION['username'];?>" />
             <p>
             操作:<label><input type="radio" name="action" checked="true" value="add">添加</label> &nbsp;&nbsp;<label><input type="radio" name="action" id="rm" value="rm">删除</label>
             </p>
