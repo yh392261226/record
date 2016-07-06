@@ -31,15 +31,23 @@ if [ "$(cat $LASTLOG)" != "$(tail -n 1 $LOGFILE | awk '{print $4}')" ]; then
   	if [ "" != "$ip" ]; then
 	  #操作该ip
       echo $ip >> $RECORDLOG
-      #csf --tempdeny $ip $TEMPDENYSEC  #临时禁止该ip sec秒
-      #csf -d $ip #永久禁止该ip
-      #iptables -I INPUT -s $ip -j DROP
+      if [ "$BLOCKTYPE" = "1" ]; then
+        iptables -I INPUT -s $ip -j DROP
+      elif [ "$BLOCKTYPE" = "2" ]; then
+        csf --tempdeny $ip $TEMPDENYSEC  #临时禁止该ip sec秒
+      elif [ "$BLOCKTYPE" = "3" ]; then
+        csf -d $ip #永久禁止该ip
+      fi
       ifsave=1
   	fi
   done
-  #if [ "$ifsave" = "1" ]; then
-    #csf -r
-    #/etc/init.d/iptables save
-  #fi
+  if [ "$ifsave" = "1" ]; then
+    if [ "$BLOCKTYPE" = "2" ] || [ "$BLOCKTYPE" = "3" ]; then
+      csf -r
+    elif [ "$BLOCKTYPE" = "1" ]; then
+      /etc/init.d/iptables save
+      service iptables restart
+    fi
+  fi
   tail -n 1 $LOGFILE | awk '{print $4}' > $LASTLOG
 fi
