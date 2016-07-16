@@ -30,10 +30,10 @@ doremoveolds() {
     usefor=$2
     if [ "$usefor" = "true" ]; then
         for dofile in $(ls $oldfiles); do
-            rm -rf $dofile
+            /bin/rm -rf $dofile
         done
     else
-        rm -rf $oldfiles
+        /bin/rm -rf $oldfiles
     fi
 }
 ##删除3天前的AI文件
@@ -73,7 +73,7 @@ if [ "" != "$diffrent" ]; then
     done
 fi
 ##清理临时的比对文件
-rm -f /tmp/patch_diff1_$(date "+%Y%m%d" -d yesterday) /tmp/patch_diff2_$(date "+%Y%m%d" -d yesterday)
+/bin/rm -f /tmp/patch_diff1_$(date "+%Y%m%d" -d yesterday) /tmp/patch_diff2_$(date "+%Y%m%d" -d yesterday)
 
 
 ##打包操作

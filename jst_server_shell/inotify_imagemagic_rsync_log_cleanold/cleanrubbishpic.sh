@@ -50,7 +50,7 @@ checkinfile() {
 ##比对得到要处理的文件列表
 getrubbishbydiff() {
     if [ ! -f $usingfile ]; then
-        rm -f /tmp/$operatedate
+        /bin/rm -f /tmp/$operatedate
         touch $alreadypath/$curlock$curlockext
         return 0
     fi
@@ -64,7 +64,7 @@ getrubbishbydiff() {
     done
 
     if [ "" = "$(cat $alreadypath/$curlock)" ]; then
-        rm -f /tmp/$operatedate /tmp/2_$operatedate
+        /bin/rm -f /tmp/$operatedate /tmp/2_$operatedate
         touch $alreadypath/$curlock$curlockext
         return 0
     fi
@@ -113,7 +113,7 @@ getdidnot() {
         result=$(/usr/bin/diff -w /tmp/didnot_needle /tmp/didnot_passed | grep '< '| sed 's,< ,,g')
     fi
     echo $result
-#    rm -f /tmp/didnot_needle /tmp/didnot_passed
+#    /bin/rm -f /tmp/didnot_needle /tmp/didnot_passed
 }
 
 ##某天已处理过的
@@ -141,7 +141,7 @@ case "$1" in
         movetobackup
         sleep 2;
         addexttolock
-        rm -f /tmp/$operatedate /tmp/2_$operatedate
+        /bin/rm -f /tmp/$operatedate /tmp/2_$operatedate
         echo "done";
         ;;
     days)
@@ -160,7 +160,7 @@ case "$1" in
             movetobackup;
             sleep 2;
             addexttolock;
-            rm -f /tmp/$operatedate /tmp/2_$operatedate
+            /bin/rm -f /tmp/$operatedate /tmp/2_$operatedate
         done
         echo "done";
         ;;
