@@ -21,26 +21,27 @@ do
     EXT=${FILENAME##*.};
     if [ "$EXT" = "$inotify_ext" ]; then
 		##获取到文件
-        uname=$(cat $DIR$FILENAME | grep 'uname=' | cut -d '=' -f 2)
-		filedir=$(cat $DIR$FILENAME | grep 'filedir=' | cut -d '=' -f 2)
-		message=$(cat $DIR$FILENAME | grep 'commit=' | cut -d '=' -f 2)
-		files=$(cat $DIR$FILENAME | grep 'files=' | cut -d '=' -f 2)
-        action=$(cat $DIR$FILENAME | grep 'action=' | cut -d '=' -f 2)
-		cd $filedir
-		$git_bin $action $files
-		$git_bin commit -m "$message"
-        $git_bin push -u origin master 2>&1 | tee $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #打印出结果集
-		if [ "$?" = "0" ]; then
-			##发送php信号 给服务端
-			finishname=$(echo $FILENAME | cut -d '.' -f 1)'.finished'
-			mv $DIR$FILENAME $DIR$finishname
-			$curl_bin -d 'uname='$uname -d 'filename='$(echo $FILENAME | cut -d '.' -f 1) $server
-            if [ "$?" = "0" ]; then
+      uname=$(cat $DIR$FILENAME | grep 'uname=' | cut -d '=' -f 2)
+		  filedir=$(cat $DIR$FILENAME | grep 'filedir=' | cut -d '=' -f 2)
+		  message=$(cat $DIR$FILENAME | grep 'commit=' | cut -d '=' -f 2)
+		  files=$(cat $DIR$FILENAME | grep 'files=' | cut -d '=' -f 2)
+      action=$(cat $DIR$FILENAME | grep 'action=' | cut -d '=' -f 2)
+      sleeptime=$(cat $DIR$FILENAME | grep 'sleeptime=' | cut -d '=' -f 2)
+		  cd $filedir
+		  $git_bin $action $files
+		  $git_bin commit -m "$message"
+      $git_bin push -u origin master 2>&1 | tee $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #打印出结果集
+		  if [ "$?" = "0" ]; then
+			  ##发送php信号 给服务端
+			  finishname=$(echo $FILENAME | cut -d '.' -f 1)'.finished'
+			  mv $DIR$FILENAME $DIR$finishname
+			  $curl_bin -d 'uname='$uname -d 'sleeptime='$sleeptime -d 'filename='$(echo $FILENAME | cut -d '.' -f 1) $server
+        if [ "$?" = "0" ]; then
 			    echo "ok";
-            else
-                echo "fail" >> $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #失败的话也打印出结果集
-                echo "fail";
-            fi
-		fi
+        else
+          echo "fail" >> $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #失败的话也打印出结果集
+          echo "fail";
+        fi
+		  fi
     fi
 done
