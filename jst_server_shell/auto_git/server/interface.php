@@ -2,7 +2,7 @@
 $log_path='./server_watching_path'; //服务端的生成文件目录
 if (!empty($_POST) && isset($_POST['uname']) && trim($_POST['uname']) != '' && isset($_POST['filename']) && trim($_POST['filename']) != '')
 {
-	$message = 'uname=' . trim($_POST['uname']) . "\n" . 'date=' . date('Y-m-d H:i:s') . "\n";
+	$message = 'uname=' . trim($_POST['uname']) . "\n" . 'sleeptime=' . intval($_POST['sleeptime']) . "\n" . 'date=' . date('Y-m-d H:i:s') . "\n";
 	file_put_contents($log_path . '/' .trim($_POST['filename']) . '.wait', $message);
 }
 
