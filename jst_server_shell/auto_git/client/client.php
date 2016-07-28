@@ -102,14 +102,14 @@ if (!empty($_POST['files']))
 	if (!isset($_POST['filedir']) || trim($_POST['filedir']) == '') $_POST['filedir'] = $filedir;
    	$uname = isset($_POST['uname']) ? trim($_POST['uname']) : $_SESSION['username'];
 
-    $message = 'commit=' . $_POST['commit'] . "\n" . 'uname=' . $uname . "\n" . 'action=' . $action . "\n" . 'filedir=' . trim($_POST['filedir']) . "\n" . 'files=' . preg_replace("/\s+/", ' ', $_POST['files']) . "\n";
+    $message = 'commit=' . $_POST['commit'] . "\n" . 'uname=' . $uname . "\n" . 'action=' . $action . "\n" . 'filedir=' . trim($_POST['filedir']) . "\n" . 'sleeptime=' . trim($_POST['sleeptime']) . "\n" . 'files=' . preg_replace("/\s+/", ' ', $_POST['files']) . "\n";
     if (!empty($message))
     {
         $tmpfilename = trim($_POST['uname']) . '_' . date('Ymd_H-i-s');
         $result = file_put_contents($logpath . '/' . $tmpfilename . '.wait', $message);
         if ($result)
         {
-            echo '提交成功,等待5分钟后即可同步至正式服务器!';
+            echo '提交成功,等待' . $_POST['sleeptime'] . '分钟后即可同步至正式服务器!';
             echo "<a style='color:red;' href='?act=viewlog&logname=" . $tmpfilename . '.log' . "'>点我</a>查看提交结果：";
             exit;
         }
@@ -139,6 +139,9 @@ if (isset($_GET['act']) && trim($_GET['act']) == 'viewlog' && trim($_GET['lognam
             <input type="hidden" name="uname" value="<?php echo $_SESSION['username'];?>" />
             <p>
             操作:<label><input type="radio" name="action" checked="true" value="add">添加</label> &nbsp;&nbsp;<label><input type="radio" name="action" id="rm" value="rm">删除</label>
+            </p>
+            <p>
+            等待时间：<label><input type="text" name="sleeptime" value="5" size="3" /></label>
             </p>
             <p>
             注释:<input type="text" name="commit" value="" />

@@ -21,6 +21,10 @@ do
     EXT=${FILENAME##*.};
     if [ "$EXT" = "$inotify_ext" ]; then
 		##获取到文件
+    cursleepseconds=$(cat $DIR$FILENAME | grep 'sleeptime=' | cur -d '=' -f 2)
+    if [ "$cursleepseconds" -gt "1" ]; then
+		  sleep_seconds=$[$cursleepseconds*60]
+	  fi
 		cd $web_path
 		sleep $sleep_seconds
         $git_bin pull 2>&1 | tee $log_path/$(echo $FILENAME | cut -d '.' -f 1).log #将结果集打印到日志文件
