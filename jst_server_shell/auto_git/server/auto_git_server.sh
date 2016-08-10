@@ -9,7 +9,7 @@ inotify_type=create                         						#监听状态
 inotify_ext=wait                           							#监听文件后缀名
 git_bin=/usr/bin/git                       							#git命令位置
 web_path=/www/server_test  					                        #web目录
-sleep_seconds=30 													#默认等待秒数 等的少了容易那边没提交完 默认可以给300秒
+sleep_seconds=300 													#默认等待秒数 等的少了容易那边没提交完 默认可以给300秒
 log_path=/www/log                                                   #日志路径
 
 ##监听并操作
