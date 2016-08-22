@@ -1,8 +1,13 @@
 #!/bin/bash
-MYSQLBIN=/usr/local/mysql
-DBHOST=localhost
-DBPORT=3306
-DBUSER=root
-DBPASS='123456'
+############################################
+### MYSQL登录脚本
+### 文件放在mysql的base目录下的bin/logindb
+############################################
+
+MYSQLBIN=/usr/local/mysql    #mysql的base目录
+DBHOST=localhost             #mysql的ip
+DBPORT=3306                  #mysql的端口
+DBUSER=root                  #mysql的账号
+DBPASS='123456'              #mysql的密码
 
 $MYSQLBIN/bin/mysql --host=${DBHOST} --user=${DBUSER} --password=${DBPASS} --port=${DBPORT}
