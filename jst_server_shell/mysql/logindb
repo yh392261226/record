@@ -1,0 +1,8 @@
+#!/bin/bash
+MYSQLBIN=/usr/local/mysql
+DBHOST=localhost
+DBPORT=3306
+DBUSER=root
+DBPASS='123456'
+
+$MYSQLBIN/bin/mysql --host=${DBHOST} --user=${DBUSER} --password=${DBPASS} --port=${DBPORT}
