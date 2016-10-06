@@ -1,6 +1,7 @@
 package main
 
 /**
+ * defer
  * 终止程序 及 让程序回转回来
  * 即先杀死它(panic) 再让它活过来(recover)
  */

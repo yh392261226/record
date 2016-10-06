@@ -1,0 +1,5 @@
+#病毒库 每种病毒一个序列行
+
+file    /Users/json/working/jst_server_shell/virus_database/virus.dat
+url http://www.baidu.com/abc.php?123&dd=12#678
+keyworkds   base64_decode(
